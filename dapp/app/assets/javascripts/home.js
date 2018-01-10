@@ -1,42 +1,52 @@
-var contractAddress = "0xF288661e101aC232139Db8C27A1072Aa5E4A275E";
-var contractAbi = [ { "constant": false, "inputs": [], "name": "kill", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "myNewVar", "type": "uint256" } ], "name": "setMyVariable", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "getMyContractBalance", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "getMyVariable", "outputs": [ { "name": "", "type": "uint256", "value": "5" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [], "name": "mortal", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "payable": true, "stateMutability": "payable", "type": "constructor" }, { "payable": true, "stateMutability": "payable", "type": "fallback" } ]
+var contractAddress = "0x59998cb13279c72aea3bfa2ba676f9826910832c";
+var contractAbi = [{"constant":false,"inputs":[{"name":"num","type":"uint256"}],"name":"addToNumber","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"num","type":"uint256"}],"name":"substractNumber","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"num","type":"uint256"}],"name":"multiplyWithNumber","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getResult","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"num","type":"uint256"}],"name":"divideByNumber","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"number","type":"uint256"}],"name":"Result","type":"event"}]
+
 var myContract = web3.eth.contract(contractAbi).at(contractAddress);
 
 $(document).on('page:ready page:change', function (){
-
-	console.log("message");
-
-	// if (typeof web3 !== 'undefined') {
-	// 	web3 = new Web3(web3.currentProvider);
-	// } else {
-	// 	// set the provider you want from Web3.providers
-	// 	web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-	// }
-
 	// Checking if Web3 has been injected by the browser (Mist/MetaMask)
 	  if (typeof web3 !== 'undefined') {
-	    // Use Mist/MetaMask's provider
+	    // Use Mist/MetaMask's provider	
 	    window.web3 = new Web3(web3.currentProvider);
 	  } else {
 	    console.log('No web3? You should consider trying MetaMask!')
 	    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
 	    window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 	  }
-
-	
-
 })
 
 $(document).on('click', '#getCounter', function(e) {
-	console.log("getCounter");
-	myContract.getMyVariable(function(error, result){
-	if(!error)
-		console.log(result)
-	else
-		console.error(error);
+	$("#myCounter").text("loading");
+	myContract.getResult(function(error, result){
+	if(!error) {
+		console.log("res:", result);
+		$("#myCounter").text(result);
+	} else
+		console.error("err:", error);
  	});
-	// document.getElementById("myCounter").innerHtml = myContract.getMyVariable();
+});
 
+$(document).on('click', '#addToCounter', function(e) {
+	$("#myCounter").text("loading");
+	myContract.addToNumber(1, function(error, result){
+	if(!error) {
+		console.log("res:", result);
+		$("#myCounter").text(result);
+	} else
+		console.error("err:", error);
+ 	});
+});
+
+$(document).on('click', '#substractFromCounter', function(e) {
+	$("#myCounter").text("loading");
+	myContract.substractNumber(1, function(error, result){
+		if(!error) {
+			console.log("res:", result);
+			$("#myCounter").text(result);
+		} else {
+			console.error("err:", error);
+		}
+	});
 });
 
 
